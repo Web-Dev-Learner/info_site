@@ -1,11 +1,8 @@
-import { createServer } from 'http';
-import { readFile } from 'fs';
-import { extname as _extname } from 'path';
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
-// Define the port
-
-const port = 3000;
-const server = createServer((req, res) => {
+const server = http.createServer((req, res) => {
     let filePath = '.' + req.url;
     if (filePath === './') {
         filePath = './index.html';
@@ -15,17 +12,17 @@ const server = createServer((req, res) => {
         filePath = './contact-me.html';
     }
 
-    const extname = String(_extname(filePath)).toLowerCase();
+    const extname = String(path.extname(filePath)).toLowerCase();
     const mimeTypes = {
         '.html': 'text/html',
     };
 
     const contentType = mimeTypes[extname] || 'application/octet-stream';
 
-    readFile(filePath, (error, content) => {
+    fs.readFile(filePath, (error, content) => {
         if (error) {
             if (error.code === 'ENOENT') {
-                readFile('./404.html', (error, content) => {
+                fs.readFile('./404.html', (error, content) => {
                     res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.end(content, 'utf-8');
                 });
@@ -40,6 +37,8 @@ const server = createServer((req, res) => {
         }
     });
 });
+
+const port = 8080; // Define the port
 
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
