@@ -2,15 +2,16 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Define the port
+const port = process.env.PORT || 8080;
+
 const server = http.createServer((req, res) => {
     let filePath = '.' + req.url;
     if (filePath === './') {
         filePath = './index.html';
-    }
-    if (filePath === './about') {
+    } else if (filePath === './about') {
         filePath = './about.html';
-    }
-    if (filePath === './contact-me') {
+    } else if (filePath === './contact-me') {
         filePath = './contact-me.html';
     }
 
@@ -40,6 +41,6 @@ const server = http.createServer((req, res) => {
     });
 });
 
-server.listen(8080, () => {
-    console.log('Server running at http://localhost:8080/');
+server.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
 });
